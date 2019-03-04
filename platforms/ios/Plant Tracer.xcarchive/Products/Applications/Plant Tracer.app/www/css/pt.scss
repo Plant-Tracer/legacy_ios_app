@@ -1,0 +1,85 @@
+/*--------------------PLANT TRACER 2.0----------------------
+	Designed and Developed by NYU CREATE (c) 2017 - 2018
+-----------------------------------------------------------*/
+
+/*-------------- command to compile ------------------
+sass --watch pt.scss:pt.css --style compressed
+*/
+
+/*------------DEBUGGERS---------------*/
+
+$borderWidth: 0px;
+
+*{
+	border:solid $borderWidth #000;
+}
+
+/*------------GENERAL---------------*/
+
+html, body{
+	height 					: 100%; 
+	width 					: 100%;
+	margin 					: 0px;
+	padding 				: 0px;
+	-webkit-touch-callout 	: none;
+	-webkit-user-select 	: none;
+	-khtml-user-select 		: none;
+	-moz-user-select 		: none;
+	-ms-user-select 		: none;
+	user-select 			: none;
+	background 				: #011500;
+	
+}
+
+
+
+/*----------------------------------------------*/
+/*------------COLORS-------------------*/
+
+$yellowHex  	: #D9E021;
+$green1Hex 		: #8FB77A;
+$green2Hex 		: #36B686;
+$green3Hex 		: #219c85;
+$blueHex 		: #29ABE2;
+
+$yellowRGBA  	: rgba(217,224, 33,1);
+$green1RGBA 	: rgba(143,183,122,1);
+$green2RGBA 	: rgba( 53,182,134,1);
+$green3RGBA 	: rgba( 34,157,133,1);
+$blueRGBA 		: rgba( 31,184,252,1);
+
+$dGray 			: rgba( 184, 184, 184, 1);
+$ddGray 		: rgba( 130, 130, 130, 1);
+$lGray 			: rgba( 238, 238, 238, 1);
+
+
+
+/*----------------------------------------------*/
+/*------------GLOBAL STYLES------------*/
+
+
+/*----------------------------------------------*/
+/*------------PARTIALS-----------------*/
+
+@import 'partials/fonts';
+
+@import 'partials/header';
+@import 'partials/footer';
+@import 'partials/nav';
+@import 'partials/ui';
+@import 'partials/messenger';
+@import 'partials/welcome';
+@import 'partials/menu';
+@import 'partials/videoPlayer';
+@import 'partials/actionPanel';
+@import 'partials/graph';
+@import 'partials/notebook';
+@import 'partials/videoSelection';
+
+
+@import 'partials/queries/galaxies';
+@import 'partials/queries/ipads';
+@import 'partials/queries/iphones';
+@import 'partials/queries/laptops';
+@import 'partials/queries/tablets';
+@import 'partials/queries/wearables';

@@ -1,0 +1,195 @@
+.actionPanel{
+	width 					: 100vw;
+	background-image  	 	: url(../img/ui/header/headerbg.png);
+	background-position 	: center;
+    background-repeat 		: no-repeat;
+    background-size 		: cover;
+    height 					: 20vh;
+    border 					: solid 0px black;
+    position 				: fixed;
+    bottom 					: 30px;
+    font-family 			: 'mont_light';
+    display 				: none;
+}
+
+.actionContent{
+	border 					: solid 0px yellow;
+	display 				: flex;
+	width 					: 100vw;
+	height 					: 90%;
+	flex-direction 			: column;
+	justify-content 		: center;
+	align-items 			: center;
+}
+
+.action{
+	border 					: solid 0px red;
+	flex-grow 				: 1;
+	height 					: 40%;
+	width 					: 85%;
+	text-align 				: center;
+}
+
+#rangeSelector{
+	border 					: solid 0px black;
+	display 				: none;
+}
+
+#framerateSelector{
+	display 				: none;
+	padding 				: 10px;
+	padding-bottom 			: 0px;
+}
+
+#framerate_input{
+	background 				: rgba( 255, 255, 255, .1 );
+	border-radius 			: 20px;
+	width 					: 60%;
+	color 					: white;
+	font-family 			: 'mont_light';
+	font-size 				: 10pt;
+	height 					: 15px;
+	padding 				: 10px;
+	text-align 				: center;
+	margin 					: 0 auto;
+	margin-top 				: 5px;
+	color 					: white;
+}
+
+#framerate_input:focus{
+	outline 				: 0px;
+}
+
+::-webkit-input-placeholder{
+	color 					: white;
+	font-weight 			: light;
+}
+::-moz-placeholder{
+	color 					: white;
+	font-weight 			: light;
+}
+::-ms-input-placeholder{
+	color 					: white;
+	font-weight 			: light;
+}
+::-moz-placeholder{
+	color 					: white;
+	font-weight 			: light;
+}
+
+#measureSelector{
+	display 				: none;
+	padding 				: 10px;
+	padding-bottom 			: 0px;
+}
+
+
+#draw_input, #undo_input, #apex_input, #inflection_input, #replay_input, #line_input, #track_input, #result_input{
+	background 				: rgba( 255, 255, 255, .1 );
+	border-radius 			: 20px;
+	width 					: 40%;
+	color 					: white;
+	font-family 			: 'mont_light';
+	font-size 				: 10pt;
+	height 					: 15px;
+	padding 				: 10px;
+	text-align 				: center;
+	margin 					: 0 auto;
+	margin-top 				: 2px;
+	color 					: white;
+	display 				: inline-block;
+}
+
+
+#save_input, #share_input, #snap_input, #finish_input{
+	flex-grow : 1;
+	background 				: rgba( 255, 255, 255, .1 );
+	border-radius 			: 20px;
+	width 					: 40%;
+	color 					: white;
+	font-family 			: 'mont_light';
+	font-size 				: 10pt;
+	height 					: 15px;
+	padding 				: 10px;
+	text-align 				: center;
+	margin 					: 1px;
+	color 					: white;
+	display 				: inline-block;
+}
+
+#pixDistance{
+	display 				: none;
+	padding 				: 10px;
+}
+
+#distance_input{
+	background 				: rgba( 255, 255, 255, .1 );
+	border-radius 			: 20px;
+	width 					: 60%;
+	color 					: white;
+	font-family 			: 'mont_light';
+	font-size 				: 10pt;
+	height 					: 15px;
+	padding 				: 10px;
+	text-align 				: center;
+	margin 					: 0 auto;
+	margin-top 				: 5px;
+	color 					: white;
+}
+
+#apex_selector{
+	display 				: none;
+	padding 				: 10px;
+}
+
+#inflection_selector{
+	display 				: none;
+	padding 				: 10px;
+}
+
+#line_selector{
+	display 				: none;
+	padding 				: 10px;
+}
+
+#tracker{
+	display 				: none;
+	padding 				: 10px;
+}
+
+#results{
+	display 				: none;
+	padding 				: 10px;
+}
+
+.actionButton{
+	border 					: solid 0px black;
+	flex-grow 				: 1;
+	width 					: 100vw;
+	display 				: block;
+}
+
+.actionButton div{
+	background 				: rgba( 255, 255, 255, .1 );
+	border-radius 			: 20px;
+	width 					: 50%;
+	color 					: white;
+	font-family 			: 'mont_light';
+	font-size 				: 10pt;
+	height 					: 15px;
+	padding 				: 10px;
+	text-align 				: center;
+	margin 					: 0 auto;
+	margin-top 				: 15px;
+}
+
+.activeButton{
+	background 				: white;
+    color  					: #011500;
+}
+
+
+
+#stats{
+	color 					: white;
+}

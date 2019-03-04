@@ -1,0 +1,103 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-battery-status": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-device-motion": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-device-orientation": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-ios-camera-permissions": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-transport-security": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-uniquedeviceid": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-http": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "com.darktalker.cordova.screenshot": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-save-image": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-background-upload": {
+            "PACKAGE_NAME": "edu.nyu.create.planttracer"
+        },
+        "cordova-plugin-code-push": {
+            "PACKAGE_NAME": "com.planttracer.application"
+        }
+    },
+    "dependent_plugins": {
+        "code-push": {
+            "PACKAGE_NAME": "com.planttracer.application"
+        }
+    }
+}

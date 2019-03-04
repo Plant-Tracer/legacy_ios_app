@@ -1,0 +1,51 @@
+#notebook{
+	background-image  	 	: url(../img/welcome/welcome_gradient.png);
+	background-position 	: center;
+    background-repeat 		: no-repeat;
+    background-size 		: cover;
+
+    position 				: absolute;
+    top  					: 0px;
+    left 					: 0px;
+    right 					: 0px;
+    margin 					: auto;
+    z-index 				: 30000;
+    width 					: 90vw;
+
+    height 					: 100vh;
+
+    padding 				: 20px;
+    display 				: none;
+}
+
+
+#notebook h3{
+	font-family 			: 'mont_extralight';
+}
+
+.notes{
+	display 				: flex;
+	flex-direction 			: column;
+    font-family             : mont_semibold;
+}
+
+.notes input{
+	border-radius 	        : 10px;
+	width 					: 90%;
+	padding 				: 10px;
+	margin 					: 10px;
+}
+
+#close_notebook{
+    position                : absolute;
+    right                   : 20px;
+    top                     : 20px;
+    width                   : 35px;
+    height                  : 35px;
+}
+
+#close_notebook img{
+    width                   : 35px;
+    height                  : 35px;
+}
+

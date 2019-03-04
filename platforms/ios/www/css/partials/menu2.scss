@@ -1,0 +1,113 @@
+#menu{
+	display 		: flex;
+	flex-direction 	: column;
+	list-style 		: none;
+	padding 		: 0px;
+	height 			: 100vh;
+	margin 			: 0px;
+}
+
+#menu li{
+	flex-grow 		: 1;
+	border 			: solid 0px black;
+}
+
+#circumnutation_link{
+	background 		: $yellowRGBA;
+	border 			: solid 0px black;
+	display 		: flex;
+	flex-direction 	: row;
+}
+
+#circumnutation_link:hover, #circumnutation_link:active, #circumnutation_link:focus{
+	background-image: url(../img/menu/Button_LeavesForClickState.svg);
+}
+
+#gravitropism_link{
+	background 		: $green1RGBA;
+	display 		: flex;
+	flex-direction 	: row;
+}
+
+#gravitropism_link:hover, #gravitropism_link:active #gravitropism_link:focus{
+	background-image: url(../img/menu/Button_LeavesForClickState.svg);
+}
+
+#dataAnalysis_link{
+	background 		: $green2RGBA;
+	display 		: flex;
+	flex-direction 	: row;
+}
+
+#dataAnalysis_link:hover, #dataAnalysis_link:active, #dataAnalysis_link:focus{
+	background-image: url(../img/menu/Button_LeavesForClickState.svg);
+}
+
+#plantLiteracy_link{
+	background 		: $green3RGBA;
+	display 		: flex;
+	flex-direction 	: row;
+}
+
+#plantLiteracy_link:hover, #plantLiteracy_link:active, #plantLiteracy_link:focus{
+	background-image: url(../img/menu/Button_LeavesForClickState.svg);
+}
+
+#HowTo_link{
+	background 		: $blueRGBA;
+	display 		: flex;
+	flex-direction 	: row;
+}
+
+#HowTo_link:hover, #HowTo_link:active, , #HowTo_link:focus{
+	background-image: url(../img/menu/Button_LeavesForClickState.svg);
+}
+
+.navtitles{
+	border 			: solid 0px black;
+	flex-grow 		: 3;
+	display 		: flex;
+	flex-direction 	: column;
+}
+
+.navtitle_1{
+	border 			: solid 0px black;
+	flex-grow 		: 1;
+	display 		: flex;
+	flex-direction 	: column;
+	justify-content	: flex-end;
+	font-family 	: heroic;
+	color 			: white;
+	font-size 		: 40pt;
+	padding-left 	: 20px;
+	text-shadow 	: 1x 1px rgba(50,50,50,1);
+}
+
+.navtitle_2{
+	border 			: solid 0px black;
+	flex-grow 		: 1;
+	display 		: flex;
+	flex-direction 	: column;
+	justify-content	: flex-start;
+	font-family 	: heroic;
+	color 			: white;
+	font-size 		: 20pt;
+	padding-left 	: 20px;
+	padding-top 	: 10px;
+	text-shadow 	: 1x 1px rgba(50,50,50,1);
+}	
+
+.navarrow{
+	flex-grow 		: initial;
+	width 			: 50px;
+	display 		: flex;
+	justify-content : center;
+	align-items 	: center;
+	color 			: white;
+	font-size 		: 30pt;
+	border 			: solid 0px black;
+}
+
+.navarrow i{
+	color 			: white;
+}

@@ -1,0 +1,13 @@
+<div style="padding:100px; font-size:12pt;">
+	<input type="text" placeholder="add Data" id="data" autofocus="true"/>
+	<br>
+	<input type="button" value="Save Data" ng-click="saveData()" />
+	<br><br><br>
+	<input type="button" value="Show DB Records" ng-click="showData()"/>
+	<br>
+	<input type="button" value="Clear records" ng-click="clearWebSql()"/>
+	<ul id="output">
+		<li ng-repeat="r in rows">{{r.d01}}</li>
+	</ul>
+
+</div>

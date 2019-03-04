@@ -1,0 +1,112 @@
+#messenger{
+	border 					: solid 0px black;
+	width 					: 90vw;
+	height 					: 85vh;
+
+	position 				: fixed;
+	left 					: 0px;
+	right 					: 0px;
+	top 					: 0px;
+	bottom 					: 0px;
+	margin 					: auto;
+
+	background 				: $lGray;
+	background-image  	 	: url(../img/welcome/welcome_gradient.png);
+	background-position 	: center;
+    background-repeat 		: no-repeat;
+    background-size 		: cover;
+    font-family 			: 'mont_light';
+    color 					: $ddGray;
+
+    display 				: none;
+
+    z-index 				: 10;
+    border-radius 			: 10px;
+}
+
+#message{
+	background 				: $lGray;
+	background-image  	 	: url(../img/ui/hint/messengerbg.png);
+	background-position 	: center;
+    background-repeat 		: no-repeat;
+    background-size 		: cover;
+	height 					: 65%;
+	margin-top 				: 20px;
+	padding					: 50px;
+	display 				: flex;
+	flex-direction 			: column;
+	border 					: solid 0px red;
+}
+
+.message_icon{
+	border 					: solid 0px black;
+	flex-grow 				: 1;
+	display 				: flex;
+	justify-content 		: center;
+	align-items				: center;
+}
+
+.message_main{
+	border 					: solid 0px black;
+	flex-grow 				: 1;
+	display 				: flex;
+	justify-content 		: center;
+	align-items				: center;
+	text-align 				: center;
+	border-top 				: solid 1px $ddGray;
+	border-bottom 			: solid 1px $ddGray;
+	font-size 				: 14pt;
+	padding-top 			: 5px;
+}
+
+.message_sub{
+	border 					: solid 0px black;
+	flex-grow 				: 1;
+	display 				: flex;
+	justify-content 		: center;
+	align-items				: center;
+	text-align 				: center;
+	font-size 				: 10pt;
+}
+
+.message_icon img{
+	width 					: 70px;
+	height 					: auto;
+}
+
+#message_action{
+	display 				: flex;
+	flex-direction 			: row;
+	border 					: solid 0px red;
+	height 					: 45px;
+	align-items 			: center;
+}
+
+#close_messenger{
+	padding-left 			: 20px;
+	height 					: 60px;
+	display 				: flex;
+	flex-direction 			: column;
+	justify-content 		: center;
+}
+
+
+#close_messenger img{
+	min-width 				: 20px;
+	width 					: auto;
+	max-width 				: 50px;
+	height 					: 35px;
+}
+
+.do_not_show_again{
+	background 				: rgba( 255, 255, 255, .1);
+	border 					: solid 0px black;
+	border-radius 			: 20px;
+	color 					: white;
+	font-size 				: 10pt;
+	margin-left 			: 50px;
+	max-height 				: 40px;
+	padding 				: 5px;
+	padding-left 			: 15px;
+	padding-right 			: 15px;
+}

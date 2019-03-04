@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="184.935" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2018-06-14T10:20:24" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="CodePush Cordova Plugin" timestamp="2018-06-14T10:20:24" tests="0" file="/Users/nickolai.toropov/Projects/cordova-plugin-code-push/bin/test/test.js" failures="0" time="0">
+  </testsuite>
+  <testsuite name="Setting Up For Tests" timestamp="2018-06-14T10:20:24" tests="1" file="/Users/nickolai.toropov/Projects/cordova-plugin-code-push/bin/test/test.js" failures="0" time="184.935">
+    <testcase name="CodePush Cordova Plugin Setting Up For Tests sets up tests correctly" time="184.935" classname="sets up tests correctly">
+    </testcase>
+  </testsuite>
+</testsuites>

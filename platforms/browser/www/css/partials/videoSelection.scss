@@ -1,0 +1,64 @@
+#videoSelector{
+	position 				: absolute;
+	width 					: 90vw;
+	height					: 85vh;
+	left 					: 0px;
+	right 					: 0px;
+	bottom 					: 0px;
+	top 					: 0px;
+	margin 					: auto;
+
+	background-image  	 	: url(../img/welcome/welcome_gradient.png);
+	background-position 	: center;
+    background-repeat 		: no-repeat;
+    background-size 		: cover;
+
+    z-index 				: 100000;
+
+    display 				: none;
+
+
+    border-radius 			: 10px;
+}
+
+.selectionWrap{
+	display 				: flex;
+	min-height 				: 100%;
+	flex-direction 			: column;
+	width 					: 100%;
+	padding 				: 15px;
+	padding-top 			: 50px;
+}
+
+.videoSelection{
+	flex-grow 				: 1;
+	text-align 				: center;
+	font-family 			: mont_light;
+	font-size 				: 14pt;
+	width 					: 85%;
+	margin					: 0 auto;
+
+	padding-top 			: 15px;
+	padding-bottom			: 15px;
+	align-self 				: center;
+	color 					: white;
+	text-shadow 			: 1x 1px rgba(50,50,50,1);
+
+}
+
+#circumnutation_sample{
+	display 				: none;
+	text-align 				: center;
+}
+
+#gravitropism_sample{
+	display 				: none;
+	text-align 				: center;
+}
+
+.videoIcon{
+	height 				: 55px;
+	width 				: auto;
+	position 			: relative;
+	left 				: 15px;
+}

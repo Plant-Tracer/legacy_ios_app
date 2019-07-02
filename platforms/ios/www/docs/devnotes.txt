@@ -74,6 +74,7 @@ cordova plugins <pluginname>
 
 9a)When ready to build for iOS use cordova first
 cordova build ios
+cordova build --release ios
 
 9b)When ready to build for iOS use Xcode after building from Cordova
 Plug Phone
@@ -81,6 +82,8 @@ Add Developer License
 Select Target Device
 Build
 
+For more information visit:
+http://www.9bitstudios.com/2016/01/submit-apache-cordova-applications-for-ios-and-android-to-the-apple-app-store-google-play/
 
 iOS SECURITY SETTINGS
 ------------------------------

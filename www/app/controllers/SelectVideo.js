@@ -13,7 +13,7 @@ app.controller('SelectVideo', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             init();
         });
 
-        
+
 
         var eventMgr = function(){
             resetEvents();
@@ -39,8 +39,8 @@ app.controller('SelectVideo', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
                 video.src                   = 'video/circumnutation_sample.mp4';
             }
             $rootScope.videoSrc             = video.src;
-            
-           
+
+
             //Set Range Selector
             setTimeout( function(){
                    // alert("resetting sliders")
@@ -75,7 +75,7 @@ app.controller('SelectVideo', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
            $("#gravitropism_sample").unbind("click");
         }
 
-       
+
         var init = function(){
             if( $rootScope.selectVideo_config.debugMode ){
                 console.log("Video Selector loaded");

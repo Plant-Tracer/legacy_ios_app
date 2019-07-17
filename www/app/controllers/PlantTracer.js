@@ -119,12 +119,12 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
 
         $scope.drawLine             = $rootScope.$on("drawLine", function(event, data){
             console.log("PT: DRAWING LINE");
-            selectScaleBox();
+            selectScaleBox();            
         });
 
         $scope.undoLine             = $rootScope.$on("undoLine", function( event, data ){
             console.log("PT: UNDO LINE");
-            undoScaleBox();
+            undoScaleBox();           
         });
 
         $scope.apexMarker           = $rootScope.$on("apexMarker", function( event, data ){
@@ -652,8 +652,8 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
 
             
             var ctx         = canvas.getContext("2d");
-            var imageData   = ctx.getImageData(templateRange[0],templateRange[1],templateRange[2],templateRange[3]);
 
+            var imageData   = ctx.getImageData(templateRange[0],templateRange[1],templateRange[2],templateRange[3]);
             var pix         = 1;
 
             for (var i = 0; i < templateRange[2]; i++) {
@@ -679,143 +679,46 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             //console.log([maxerror, boxWidth, boxHeight, templateRange]);
 
 
-            if($rootScope.currentView == "gravitropism"){
-                for (var i = 0; i <= (templateRange[2]-boxWidth); i++) {
-                    for (var j = 0; j <= (templateRange[3] - boxHeight) ;j++){
-                        // var imageData = ctx.getImageData((templateRange[0] + i),(templateRange[1] + j),boxWidth,boxHeight);
-                       
-                        error1 = calculate(i,j);
-                         //console.log("626 :)")
-                        var previous_x  = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
-                        var previous_y  = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
-                        var current_x   = templateRange[0] + i;
-                        var current_y   = templateRange[1] + j;
-                        var error2      = Math.sqrt((previous_x-current_x)*(previous_x-current_x)+(previous_y-current_y)*(previous_y-current_y));
-    
-                        var error3;
-    
-                        //console.log([previous_x,previous_y,current_x,current_y,error2])
-                        if($rootScope.compareCount < 3){
-                        //  error2 = 0;
-                            error3 = 0;
-                        }
-                        else{
-                            var a1 = $rootScope.saveMove[$rootScope.saveMove.length-2][0];
-                            var a2 = $rootScope.saveMove[$rootScope.saveMove.length-2][1];
-                            var b1 = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
-                            var b2 = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
-                            var c1 = templateRange[0] + i;
-                            var c2 = templateRange[1] + j;
-                            var component1 = ((a1-b1)-(b1-c1))*((a1-b1)-(b1-c1));
-                            var component2 = ((a2-b2)-(b2-c2))*((a2-b2)-(b2-c2));
-                            error3 = Math.sqrt(component1+component2);
-                        }
-    
-                        error = (0.6*error1 + 74*error2 + 36*error3)/100;
-                        //if contains foreground in above 2X10, max error
-    
-                        if (error< maxerror && error !=0) {
-                            $rootScope.position[0] = Math.round(templateRange[0] + i);
-                            $rootScope.position[1] = Math.round(templateRange[1] + j);
-                            moveX = i;
-                            moveY = j;
-                            maxerror = error;
-                        }
+            for (var i = 0; i <= (templateRange[2]-boxWidth); i++) {
+                for (var j = 0; j <= (templateRange[3] - boxHeight) ;j++){
+                    // var imageData = ctx.getImageData((templateRange[0] + i),(templateRange[1] + j),boxWidth,boxHeight);
+                   
+                    error1 = calculate(i,j);
+                     //console.log("626 :)")
+                    var previous_x  = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
+                    var previous_y  = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
+                    var current_x   = templateRange[0] + i;
+                    var current_y   = templateRange[1] + j;
+                    var error2      = Math.sqrt((previous_x-current_x)*(previous_x-current_x)+(previous_y-current_y)*(previous_y-current_y));
+
+                    var error3;
+
+                    //console.log([previous_x,previous_y,current_x,current_y,error2])
+                    if($rootScope.compareCount < 3){
+                    //  error2 = 0;
+                        error3 = 0;
+                    }
+                    else{
+                        var a1 = $rootScope.saveMove[$rootScope.saveMove.length-2][0];
+                        var a2 = $rootScope.saveMove[$rootScope.saveMove.length-2][1];
+                        var b1 = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
+                        var b2 = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
+                        var c1 = templateRange[0] + i;
+                        var c2 = templateRange[1] + j;
+                        var component1 = ((a1-b1)-(b1-c1))*((a1-b1)-(b1-c1));
+                        var component2 = ((a2-b2)-(b2-c2))*((a2-b2)-(b2-c2));
+                        error3 = Math.sqrt(component1+component2);
+                    }
+
+                    error = (0.6*error1 + 74*error2 + 36*error3)/100;
+                    if (error< maxerror && error !=0) {
+                        $rootScope.position[0] = Math.round(templateRange[0] + i);
+                        $rootScope.position[1] = Math.round(templateRange[1] + j);
+                        moveX = i;
+                        moveY = j;
+                        maxerror = error;
                     }
                 }
-    
-            }else{
-                var src = cv.matFromImageData(imageData); //problem, something seems fulling , must have src.delete();
-                var dst = new cv.Mat();
-                //cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
-                cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
-                cv.threshold(src, dst, 90, 200, cv.THRESH_BINARY);
-
-                console.log(dst.data);
-                //var dst = src;
-
-                //console.log(dst.data)
-
-                //modified algorithm
-                for (var i = 0; i <= (templateRange[2]-boxWidth); i++) {
-                    for (var j = 0; j <= (templateRange[3] - boxHeight) ;j++){
-                        // var imageData = ctx.getImageData((templateRange[0] + i),(templateRange[1] + j),boxWidth,boxHeight);
-                        //var binary_x = Math.round(templateRange[0] + i);
-                        //var binary_y = Math.round(templateRange[1] + j);
-                        //var error1 = calculate(i,j);
-
-                        var error1 = 0;
-                        for(var xx = 0; xx < boxWidth; xx++){
-                            for(var yy = 0; yy < boxHeight; yy++){
-                                error1 += Math.abs(image1Trans[xx][yy] - image2Trans[xx+i][yy+j]);// * dst.data[(i+xx)*templateRange[2]+j+yy] / 200;
-                            }
-                        }
-                         //console.log("626 :)")
-                        var previous_x  = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
-                        var previous_y  = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
-                        var current_x   = templateRange[0] + i;
-                        var current_y   = templateRange[1] + j;
-                        //alert(current_x)
-                        //alert(current_y)
-                        var error2      = Math.sqrt((previous_x-current_x)*(previous_x-current_x)+(previous_y-current_y)*(previous_y-current_y));
-    
-                        var error3;
-
-
-                        //alert(dst.data.length);
-
-                        var summ = 0;
-                        for (var ii = 0; ii<boxWidth; ii++) {
-                            summ = summ + dst.data[i*templateRange[2]+j+ii] + dst.data[(i+1)*templateRange[2]+j+ii];  // top 2
-                            summ = summ + dst.data[(i+ii)*templateRange[2]+j];  // left 1
-                            summ = summ + dst.data[(i+ii+1)*templateRange[2]+j-1];  // right 1
-                        }
-                        if (summ > 100 ){
-                            error1 = error1*999;
-                        }
-                        // else{
-                        //     console.log(error1);
-                        //     console.log(error2+error3);
-                        // }
-
-
-                        //console.log([previous_x,previous_y,current_x,current_y,error2])
-                        if($rootScope.compareCount < 3){
-                        //  error2 = 0;
-                            error3 = 0;
-                        }
-                        else{
-                            var a1 = $rootScope.saveMove[$rootScope.saveMove.length-2][0];
-                            var a2 = $rootScope.saveMove[$rootScope.saveMove.length-2][1];
-                            var b1 = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
-                            var b2 = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
-                            var c1 = templateRange[0] + i;
-                            var c2 = templateRange[1] + j;
-                            var component1 = ((a1-b1)-(b1-c1))*((a1-b1)-(b1-c1));
-                            var component2 = ((a2-b2)-(b2-c2))*((a2-b2)-(b2-c2));
-                            error3 = Math.sqrt(component1+component2);
-                        }
-    
-                        error = (error1*10 + 40*error2 + 56*error3)/100;
-                        //if contains foreground in above 2X10, max error
-                        
-    
-                        if (error< maxerror && error !=0) {
-                            $rootScope.position[0] = Math.round(templateRange[0] + i);
-                            $rootScope.position[1] = Math.round(templateRange[1] + j);
-                            moveX = i;
-                            moveY = j;
-                            maxerror = error;
-                        }
-
-                      
-                     
-                    }
-                }
-                console.log(maxerror);
-                src.delete();
-                dst.delete();
-    
             }
 
             //alert(":)")
@@ -900,7 +803,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
                 //console.log( "x "+x )
                 for(y = 0; y < boxHeight; y++){
                     //console.log("y "+y)
-                    error += Math.abs(image1Trans[x][y] - image2Trans[x+i][y+j]) * dst.data[(i+x)*templateRange[2]+j+y] / 200;
+                    error += Math.abs(image1Trans[x][y] - image2Trans[x+i][y+j]);
                     //console.log(error)
                 }
             }
@@ -908,7 +811,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             return error;
         }
 
-        var init = function(){
+    	var init = function(){
             if( $rootScope.planttracer_config.debugMode ){
                 console.log("PLANT TRACER loaded")
             }

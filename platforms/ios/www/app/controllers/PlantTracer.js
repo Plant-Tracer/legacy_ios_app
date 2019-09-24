@@ -55,7 +55,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
         var image2Trans                 = [];
         var judge                       = 0;
         var FPS                         = 20;
-       
+
         var background                  = [];
         var inflectionCount             = 0;
 
@@ -66,7 +66,43 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
 
         var replayVar;
         var isReplaying                 = false;
-        
+
+        //new algo
+        let cap;
+
+        //parameters for the box (the selected box, the search area, min_fp_thred)
+        let [box_size, search_box_size, min_fp_thred] = [20, 200, 2];
+        let initial_position = [0,0];
+
+        // parameters for ShiTomasi corner detection
+        let [maxCorners, qualityLevel, minDistance, blockSize] = [30, 0.3, 7, 7];
+
+        // parameters for lucas kanade optical flow
+        let winSize = new cv.Size(15, 15);
+        let maxLevel = 2;
+        let criteria = new cv.TermCriteria(cv.TERM_CRITERIA_EPS | cv.TERM_CRITERIA_COUNT, 10, 0.03);
+
+        // create some random colors
+        let color = [];
+        for (let i = 0; i < maxCorners; i++) {
+            color.push(new cv.Scalar(parseInt(Math.random()*255), parseInt(Math.random()*255),
+                                     parseInt(Math.random()*255), 255));
+        }
+
+        var oldFrame, oldGray, p0;
+        var initial_mask;
+
+        var zeroEle = new cv.Scalar(0, 0, 0, 255);
+        var mask = new cv.Mat(oldFrame.rows, oldFrame.cols, oldFrame.type(), zeroEle);
+
+        var frame;
+        var frameGray;
+        var p1;
+        var st;
+        var err;
+
+        const FPS = 30;
+
         $rootScope.$on("deviceReady", function(event, data){
             console.log("PT: DEVICE READY SIGNAL RECEIVED");
             init();
@@ -89,7 +125,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             image2Trans                 = [];
             judge                       = 0;
             FPS                         = 20;
-           
+
             background                  = [];
             inflectionCount             = 0
 
@@ -116,7 +152,6 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             $scope.refreshCanvas();
         });
 
-
         $scope.drawLine             = $rootScope.$on("drawLine", function(event, data){
             console.log("PT: DRAWING LINE");
             selectScaleBox();
@@ -129,12 +164,12 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
 
         $scope.apexMarker           = $rootScope.$on("apexMarker", function( event, data ){
             console.log("PT: MARKING APEX");
-            selectBox();           
+            selectBox();
         });
 
         $scope.inflectionMarker     = $rootScope.$on("inflectionMarker", function( event, data ){
             console.log("PT: MARKING INFLECTION");
-           inflectionBox();         
+           inflectionBox();
         });
 
         $scope.replayVideo          = $rootScope.$on("replayVideo", function(){
@@ -147,8 +182,8 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
 
         $scope.track                = $rootScope.$on("trackPlant", function( event, data ){
             console.log("PT: TRACKING PLANT");
-            
-            startTrack();       
+
+            startTrack();
         });
 
         $scope.refreshCanvas        = $rootScope.$on("refreshCanvas", function(event, data){
@@ -176,8 +211,6 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
 
             reloadImg();
         });
-
-
 
         function reloadImg(){
             console.log("Reloading image")
@@ -210,11 +243,11 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
         // Draw two scale box to set scale.
         function getScaleBoxes(event){
             console.log("getScaleBox1 invoked");
-            
+
             if ( !canvas.getBoundingClientRect ){ alert("Fail!");}
 
             reloadImg();
-            
+
             if( $rootScope.count_box1 > 0 ){  $rootScope.firstBox = false;  $rootScope.secondBox = true;}
             if( $rootScope.count_box2 > 0 ){  $rootScope.secondBox = false; }
 
@@ -223,10 +256,10 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             var y           = event.clientY - rect.top;
 
             //alert([rect, x, y ]);
-            
+
             if (x < $rootScope.videoDimension.width && x > 0 && y > 0 && y < $rootScope.videoDimension.height ) {
                 if( $rootScope.firstBox){ $rootScope.position_box1 = [x,y]; }
-                if( $rootScope.secondBox){$rootScope.position_box2 = [x,y]; }  
+                if( $rootScope.secondBox){$rootScope.position_box2 = [x,y]; }
             };
 
             if($rootScope.firstBox){
@@ -253,7 +286,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
                     document.getElementById("scalebox2").style.display      = "block";
                     document.getElementById("scalebox2").style.marginTop    = tempy+'px';
                     document.getElementById("scalebox2").style.marginLeft   = $rootScope.position_box2[0]+'px';
- 
+
                 }else{
                     reloadImg();
                     var tempy                                               = $rootScope.position_box2[1]-$rootScope.videoDimension.height;
@@ -266,7 +299,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
                 $(".actionButton div").fadeIn();
                 $rootScope.count_box2++;
 
-            }         
+            }
         }
 
         function drawScaleLine(){
@@ -278,7 +311,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             var endy                                                    = $rootScope.position_box2[1]+scaleboxHeight;
 
             $rootScope.distance                                         = Math.sqrt(((endx-startx)*(endx-startx)) + ((endy-starty)*(endy-starty)));
-            
+
             var c                                                       = document.getElementById("canvas");
             var ctx                                                     = c.getContext("2d");
             ctx.beginPath();
@@ -341,13 +374,21 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             var x       = event.clientX - rect.left;
             var y       = event.clientY - rect.top;
 
-           
+
             if ( x < $rootScope.videoDimension.width && x > 0 && y > 0 && y < $rootScope.videoDimension.height ) {
                 $rootScope.position            = [x,y];
                 $rootScope.position[0]         = Math.round($rootScope.position[0]);
                 $rootScope.position[1]         = Math.round($rootScope.position[1]);
                 $rootScope.savePositionForback = [$rootScope.position[0],$rootScope.position[1]];
+
+                for (var i=$rootScope.position[0]; i<$rootScope.position[0]+boxWidth; i++) {        //initial box to be here
+                    for (var j=$rootScope.position[1]; j< $rootScope.position[1]+boxHeight; j++) {
+                        initial_mask.data[i*$rootScope.videoDimension.width+j] = 1;
+                    }
+                }
             }
+
+            cv.goodFeaturesToTrack(oldGray, p0, maxCorners, qualityLevel, minDistance, initial_mask, blockSize);
 
             if (count === 0) {
                 drawBox();
@@ -356,7 +397,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             }
             count++;
 
-             
+
 
             $(".actionButton div").fadeIn();
         }
@@ -372,7 +413,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
         function redrawBox(){
             console.log( "re-drawBox()");
             reloadImg();
-            drawBox();  
+            drawBox();
         }
 
         //Inflection Marker
@@ -393,7 +434,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             var rect    = canvas.getBoundingClientRect();
             var x       = event.clientX - rect.left;
             var y       = event.clientY - rect.top;
-            
+
             if (x < $rootScope.videoDimension.width && x > 0 && y > 0 && y < $rootScope.videoDimension.height ) {
                 $rootScope.inflectionPos = [x,y];
             };
@@ -408,7 +449,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
                 drawInflectionBox();
             }
 
-           
+
             $(".actionButton div").fadeIn();
 
         }
@@ -435,7 +476,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             reloadImg();
             replayVar = setInterval(function(){
                 video.currentTime = (video.currentTime+0.05).toFixed(2);
-                //console.log([$rootScope.startTime, $rootScope.endTime, video.currentTime]);  
+                //console.log([$rootScope.startTime, $rootScope.endTime, video.currentTime]);
                 reloadImg();
 
                 //bug patch to fix duplicate invokation
@@ -443,17 +484,17 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
 
                 if(video.currentTime >= $rootScope.endTime){
                     //UI/UX
-                    $("#replay_input").click( function(){$rootScope.$broadcast("replayVideo");}); 
+                    $("#replay_input").click( function(){$rootScope.$broadcast("replayVideo");});
                     $("#replay_input").html("Replay");
                     $("#replay_input").css("background", "rgba( 255, 255, 255, .1 )");
                     $("#replay_input").css("color", "#fff");
-                    
+
                     video.currentTime = $rootScope.startTime;
                     setTimeout(function(){reloadImg();},50);
 
                     clearInterval(replayVar);
 
-                    
+
                 }
               }, 50);
         }
@@ -472,11 +513,11 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             ctx.lineWidth = 1;
             ctx.strokeStyle = "#F00";//'#d9e021';
             ctx.stroke();
-            
+
             $("#line_input").unbind('click');
         }
 
-        //TRACKING 
+        //TRACKING
         function startTrack(){
             //("start Tracking")
             //console.log("tracking started")
@@ -496,7 +537,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             $rootScope.diffx_list           = [];
             $rootScope.position_list        = [];
 
-           
+
             if($rootScope.position[0] == -1){
                 return;
             }
@@ -512,9 +553,10 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             $rootScope.compareCount        = 0;
             judge                          = 1;
 
-            //if( $rootScope.currentView == "circumnutation"){
-                readData();
-           // }
+
+
+                //readData();
+
 
             tracking();
 
@@ -538,7 +580,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
                 }
                 background.push(temp);
             }
-            
+
             video.currentTime = $rootScope.startTime;
         }
 
@@ -610,7 +652,55 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
         function tracking(){
             //console.log("Start tracking...")
            // alert("tracking");
-            $rootScope.myVar = setTimeout(function(){ compareImg() }, 50);
+          //  $rootScope.myVar = setTimeout(function(){ compareImg() }, 50);
+
+          // new algo
+          let begin = Date.now();
+
+          // start processing.
+          cap.read(frame);
+          cv.cvtColor(frame, frameGray, cv.COLOR_RGBA2GRAY);
+
+          // calculate optical flow
+          cv.calcOpticalFlowPyrLK(oldGray, frameGray, p0, p1, st, err, winSize, maxLevel, criteria);
+
+          // select good points
+          let goodNew = [];
+          let goodOld = [];
+          for (let i = 0; i < st.rows; i++) {
+              if (st.data[i] === 1) {
+                  goodNew.push(new cv.Point(p1.data32F[i*2], p1.data32F[i*2+1]));
+                  goodOld.push(new cv.Point(p0.data32F[i*2], p0.data32F[i*2+1]));
+              }
+          }
+
+          // if (goodNew.length<xxxxx){ //redetect feature points
+          //     cv.goodFeaturesToTrack(oldGray, p0, maxCorners, qualityLevel, minDistance, initial_mask, blockSize);
+          // }
+
+          // draw the tracks
+          for (let i = 0; i < goodNew.length; i++) {
+              cv.line(mask, goodNew[i], goodOld[i], color[i], 2);
+              cv.circle(frame, goodNew[i], 5, color[i], -1);
+          }
+          cv.add(frame, mask, frame);
+
+          cv.imshow('canvas', frame);
+
+          // save the coordinate Math.mean(goodNew[])
+
+          // now update the previous frame and previous points
+          frameGray.copyTo(oldGray);
+          p0.delete(); p0 = null;
+          p0 = new cv.Mat(goodNew.length, 1, cv.CV_32FC2);
+          for (let i = 0; i < goodNew.length; i++) {
+              p0.data32F[i*2] = goodNew[i].x;
+              p0.data32F[i*2+1] = goodNew[i].y;
+          }
+
+          // schedule the next one.
+          let delay = 1000/FPS - (Date.now() - begin);
+          setTimeout(tracking, delay);
         }
 
         function compareImg(){
@@ -619,10 +709,10 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             selectTemplate();
 
             video.currentTime = (Math.round((0.05+video.currentTime)*1000))/1000;
-            
+
             reloadImg();
 
-            
+
 
             if(video.currentTime >= $rootScope.endTime){
                 //alert("stop")
@@ -636,7 +726,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
                     startTrack();
                 });
 
-                
+
 
                 clearTimeout($rootScope.myVar);
                 drawAllDots();
@@ -650,10 +740,10 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             };
 
 
-            
-            var ctx         = canvas.getContext("2d");
-            var imageData   = ctx.getImageData(templateRange[0],templateRange[1],templateRange[2],templateRange[3]);
 
+            var ctx         = canvas.getContext("2d");
+
+            var imageData   = ctx.getImageData(templateRange[0],templateRange[1],templateRange[2],templateRange[3]);
             var pix         = 1;
 
             for (var i = 0; i < templateRange[2]; i++) {
@@ -669,7 +759,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
                     image2Trans[i][j] = imageData.data[pix] ;
                     pix +=4;
                 };
-            };      
+            };
 
             var moveX;
             var moveY;
@@ -679,147 +769,50 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             //console.log([maxerror, boxWidth, boxHeight, templateRange]);
 
 
-            if($rootScope.currentView == "gravitropism"){
-                for (var i = 0; i <= (templateRange[2]-boxWidth); i++) {
-                    for (var j = 0; j <= (templateRange[3] - boxHeight) ;j++){
-                        // var imageData = ctx.getImageData((templateRange[0] + i),(templateRange[1] + j),boxWidth,boxHeight);
-                       
-                        error1 = calculate(i,j);
-                         //console.log("626 :)")
-                        var previous_x  = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
-                        var previous_y  = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
-                        var current_x   = templateRange[0] + i;
-                        var current_y   = templateRange[1] + j;
-                        var error2      = Math.sqrt((previous_x-current_x)*(previous_x-current_x)+(previous_y-current_y)*(previous_y-current_y));
-    
-                        var error3;
-    
-                        //console.log([previous_x,previous_y,current_x,current_y,error2])
-                        if($rootScope.compareCount < 3){
-                        //  error2 = 0;
-                            error3 = 0;
-                        }
-                        else{
-                            var a1 = $rootScope.saveMove[$rootScope.saveMove.length-2][0];
-                            var a2 = $rootScope.saveMove[$rootScope.saveMove.length-2][1];
-                            var b1 = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
-                            var b2 = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
-                            var c1 = templateRange[0] + i;
-                            var c2 = templateRange[1] + j;
-                            var component1 = ((a1-b1)-(b1-c1))*((a1-b1)-(b1-c1));
-                            var component2 = ((a2-b2)-(b2-c2))*((a2-b2)-(b2-c2));
-                            error3 = Math.sqrt(component1+component2);
-                        }
-    
-                        error = (0.6*error1 + 74*error2 + 36*error3)/100;
-                        //if contains foreground in above 2X10, max error
-    
-                        if (error< maxerror && error !=0) {
-                            $rootScope.position[0] = Math.round(templateRange[0] + i);
-                            $rootScope.position[1] = Math.round(templateRange[1] + j);
-                            moveX = i;
-                            moveY = j;
-                            maxerror = error;
-                        }
+            for (var i = 0; i <= (templateRange[2]-boxWidth); i++) {
+                for (var j = 0; j <= (templateRange[3] - boxHeight) ;j++){
+                    // var imageData = ctx.getImageData((templateRange[0] + i),(templateRange[1] + j),boxWidth,boxHeight);
+
+                    error1 = calculate(i,j);
+                     //console.log("626 :)")
+                    var previous_x  = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
+                    var previous_y  = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
+                    var current_x   = templateRange[0] + i;
+                    var current_y   = templateRange[1] + j;
+                    var error2      = Math.sqrt((previous_x-current_x)*(previous_x-current_x)+(previous_y-current_y)*(previous_y-current_y));
+
+                    var error3;
+
+                    //console.log([previous_x,previous_y,current_x,current_y,error2])
+                    if($rootScope.compareCount < 3){
+                    //  error2 = 0;
+                        error3 = 0;
+                    }
+                    else{
+                        var a1 = $rootScope.saveMove[$rootScope.saveMove.length-2][0];
+                        var a2 = $rootScope.saveMove[$rootScope.saveMove.length-2][1];
+                        var b1 = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
+                        var b2 = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
+                        var c1 = templateRange[0] + i;
+                        var c2 = templateRange[1] + j;
+                        var component1 = ((a1-b1)-(b1-c1))*((a1-b1)-(b1-c1));
+                        var component2 = ((a2-b2)-(b2-c2))*((a2-b2)-(b2-c2));
+                        error3 = Math.sqrt(component1+component2);
+                    }
+
+                    error = (0.6*error1 + 74*error2 + 36*error3)/100;
+                    if (error< maxerror && error !=0) {
+                        $rootScope.position[0] = Math.round(templateRange[0] + i);
+                        $rootScope.position[1] = Math.round(templateRange[1] + j);
+                        moveX = i;
+                        moveY = j;
+                        maxerror = error;
                     }
                 }
-    
-            }else{
-                var src = cv.matFromImageData(imageData); //problem, something seems fulling , must have src.delete();
-                var dst = new cv.Mat();
-                //cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
-                cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
-                cv.threshold(src, dst, 90, 200, cv.THRESH_BINARY);
-
-                console.log(dst.data);
-                //var dst = src;
-
-                //console.log(dst.data)
-
-                //modified algorithm
-                for (var i = 0; i <= (templateRange[2]-boxWidth); i++) {
-                    for (var j = 0; j <= (templateRange[3] - boxHeight) ;j++){
-                        // var imageData = ctx.getImageData((templateRange[0] + i),(templateRange[1] + j),boxWidth,boxHeight);
-                        //var binary_x = Math.round(templateRange[0] + i);
-                        //var binary_y = Math.round(templateRange[1] + j);
-                        //var error1 = calculate(i,j);
-
-                        var error1 = 0;
-                        for(var xx = 0; xx < boxWidth; xx++){
-                            for(var yy = 0; yy < boxHeight; yy++){
-                                error1 += Math.abs(image1Trans[xx][yy] - image2Trans[xx+i][yy+j]);// * dst.data[(i+xx)*templateRange[2]+j+yy] / 200;
-                            }
-                        }
-                         //console.log("626 :)")
-                        var previous_x  = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
-                        var previous_y  = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
-                        var current_x   = templateRange[0] + i;
-                        var current_y   = templateRange[1] + j;
-                        //alert(current_x)
-                        //alert(current_y)
-                        var error2      = Math.sqrt((previous_x-current_x)*(previous_x-current_x)+(previous_y-current_y)*(previous_y-current_y));
-    
-                        var error3;
-
-
-                        //alert(dst.data.length);
-
-                        var summ = 0;
-                        for (var ii = 0; ii<boxWidth; ii++) {
-                            summ = summ + dst.data[i*templateRange[2]+j+ii] + dst.data[(i+1)*templateRange[2]+j+ii];  // top 2
-                            summ = summ + dst.data[(i+ii)*templateRange[2]+j];  // left 1
-                            summ = summ + dst.data[(i+ii+1)*templateRange[2]+j-1];  // right 1
-                        }
-                        if (summ > 100 ){
-                            error1 = error1*999;
-                        }
-                        // else{
-                        //     console.log(error1);
-                        //     console.log(error2+error3);
-                        // }
-
-
-                        //console.log([previous_x,previous_y,current_x,current_y,error2])
-                        if($rootScope.compareCount < 3){
-                        //  error2 = 0;
-                            error3 = 0;
-                        }
-                        else{
-                            var a1 = $rootScope.saveMove[$rootScope.saveMove.length-2][0];
-                            var a2 = $rootScope.saveMove[$rootScope.saveMove.length-2][1];
-                            var b1 = $rootScope.saveMove[$rootScope.saveMove.length-1][0];
-                            var b2 = $rootScope.saveMove[$rootScope.saveMove.length-1][1];
-                            var c1 = templateRange[0] + i;
-                            var c2 = templateRange[1] + j;
-                            var component1 = ((a1-b1)-(b1-c1))*((a1-b1)-(b1-c1));
-                            var component2 = ((a2-b2)-(b2-c2))*((a2-b2)-(b2-c2));
-                            error3 = Math.sqrt(component1+component2);
-                        }
-    
-                        error = (error1*10 + 40*error2 + 56*error3)/100;
-                        //if contains foreground in above 2X10, max error
-                        
-    
-                        if (error< maxerror && error !=0) {
-                            $rootScope.position[0] = Math.round(templateRange[0] + i);
-                            $rootScope.position[1] = Math.round(templateRange[1] + j);
-                            moveX = i;
-                            moveY = j;
-                            maxerror = error;
-                        }
-
-                      
-                     
-                    }
-                }
-                console.log(maxerror);
-                src.delete();
-                dst.delete();
-    
             }
 
             //alert(":)")
-            
+
 
             var save = [$rootScope.position[0],$rootScope.position[1],video.currentTime];
             $rootScope.saveMove.push(save);
@@ -836,16 +829,16 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             };
 
             //console.log( $rootScope.position_list )
-            
+
             image1Trans = temp;
             // selectTemplate();
             drawBox();
-            
+
             if($rootScope.currentView == "gravitropism"){
                 drawInflectionBox();
                 drawBoxLine();
             }
-            
+
             drawAllDots();
             growList(only_position);
             // video.pause();
@@ -900,7 +893,7 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
                 //console.log( "x "+x )
                 for(y = 0; y < boxHeight; y++){
                     //console.log("y "+y)
-                    error += Math.abs(image1Trans[x][y] - image2Trans[x+i][y+j]) * dst.data[(i+x)*templateRange[2]+j+y] / 200;
+                    error += Math.abs(image1Trans[x][y] - image2Trans[x+i][y+j]);
                     //console.log(error)
                 }
             }
@@ -908,18 +901,40 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
             return error;
         }
 
-        var init = function(){
-            if( $rootScope.planttracer_config.debugMode ){
-                console.log("PLANT TRACER loaded")
-            }
+      	var init = function(){
+              if( $rootScope.planttracer_config.debugMode ){
+                  console.log("PLANT TRACER loaded")
+              }
 
-            video                           = document.getElementById('videoPlayer');
-            canvas                          = document.getElementById("canvas");
-            context                         = canvas.getContext('2d');
-            context.imageSmoothingEnabled   = false;
-            //$rootScope.startTime            = video.currentTime;
-            //$rootScope.endTime              = video.duration;
-        };
+              video                           = document.getElementById('videoPlayer');
+              cap                         = new cv.VideoCapture(video);
+              canvas                          = document.getElementById("canvas");
+              context                         = canvas.getContext('2d');
+              context.imageSmoothingEnabled   = false;
+
+
+              oldFrame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+              cap.read(oldFrame);
+
+              oldGray = new cv.Mat();
+              cv.cvtColor(oldFrame, oldGray, cv.COLOR_RGB2GRAY);
+
+              p0 = new cv.Mat();
+
+              initial_mask = new cv.Mat.zeros(video.height, video.width, cv.CV_8UC1);    // mask – Optional region of interest.
+
+              zeroEle = new cv.Scalar(0, 0, 0, 255);
+              mask = new cv.Mat(oldFrame.rows, oldFrame.cols, oldFrame.type(), zeroEle);
+
+              frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+              frameGray = new cv.Mat();
+              p1 = new cv.Mat();
+              st = new cv.Mat();
+              err = new cv.Mat();
+
+          };
+
+
 
         if($rootScope.deviceLoaded){
             init();

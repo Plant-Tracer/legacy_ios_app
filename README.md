@@ -1,4 +1,4 @@
-# Hello World PhoneGap Template [![bitHound Score][bithound-img]][bithound-url]
+# (legacy) Hello World PhoneGap Template 
 
 A PhoneGap Hello World template
 

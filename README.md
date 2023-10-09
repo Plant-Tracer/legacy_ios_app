@@ -1,69 +1,27 @@
-# (legacy) Hello World PhoneGap Template 
+# Plant Tracer app
 
-A PhoneGap Hello World template
+## Build
 
-## Usage
+cordova prepare
+cordova build ios
+cordova build android
 
-#### PhoneGap CLI
+## Run on emulator
 
-The hello-world template is the default when you create a new application using the [phonegap-cli][phonegap-cli-url].
+cordova emulate ios
+cordova emulate android
 
-    phonegap create my-app
+## Notes
 
-Create an app using this template specifically:
+At the current time, the PlantTracer project has no plans to release a new version of Plant Tracer iOS app -- the work here in this branch is just exploratory.
 
-    phonegap create my-app --template hello-world
+Currently, this update-cordova branch is a work in progress. The main branch version is from 2017 and based on a very old version of Cordova (7.1). This branch is an attempt to get the app running of Cordova "latest" which at the moment is 12.0.0. As of today (Oct 9, 2023) the ios build completes successfully. The ios app runs in a simulator but only shows a black screen. The android build fails with Dex errors, probably due to android library version conflicts in various dependencies? Running a browser build works a little better -- the initial screens are shown, but "Upload video" does nothing and we are stuck.
 
-To see a list of other available PhoneGap templates:
+The cordova-plugin-background-upload is currently removed due to dependency conflicts but maybe it is needed? There's a lot of dependency conflict issues trying to update various plugins.
 
-    phonegap template list
+Also note that for cordova-ios@7.0.1 -- the latest as of this date, the target iOS is 11, but XCode 15 won't accept anything less than 12. This doesn't seem to stop the generated app from running even on iOS 17, but produces warning in the ios build. So probably should downgrade XCode to 14.3 or else wait for someone to update cordova-ios.
 
-## [config.xml][config-xml]
+This branch takes the perhaps naive position that the platforms, plugins, and node_modules folders are not source code, but rather build artifacts. This is different from the approach taken currently in main. It is unknown whether the previous dev team made by-hand changes in the platforms, plugins, or node_modules folders. One hopes not, but given the version clashes in dependencies, one wonders whether things were hacked to accommodate.
 
-#### android-minSdkVersion (Android only)
+At some point working on this branch, a number of plugin definitions disappeared from config.xml. Not sure why or how, and some of them may need to be restored and updated. But at the moment, with the build not working in android with even fewer plugins, the issue is not yet ripe for resolution.
 
-Minimum SDK version supported on the target device. Maximum version is blank by default.
-
-This template sets the minimum to `14`.
-
-    <preference name="android-minSdkVersion" value="14" />
-
-#### &lt;access ...&gt; (All)
-
-This template defaults to wide open access.
-
-    <access origin="*" />
-
-It is strongly encouraged that you restrict access to external resources in your application before releasing to production.
-
-For more information on whitelist configuration, see the [Cordova Whitelist Guide][cordova-whitelist-guide] and the [Cordova Whitelist Plugin documentation][cordova-plugin-whitelist]
-
-## [www/index.html][index-html]
-
-#### Content Security Policy (CSP)
-
-The default CSP is similarly open:
-
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
-
-Much like the access tag above, you are strongly encouraged to use a more restrictive CSP in production.
-
-A good starting point declaration might be:
-
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" />
-
-For more information on the Content Security Policy, see the [section on CSP in the Cordova Whitelist Plugin documentation][cordova-plugin-whitelist-csp].
-
-Another good resource for generating a good CSP declaration is [CSP is Awesome][csp-is-awesome]
-
-
-[phonegap-cli-url]: http://github.com/phonegap/phonegap-cli
-[cordova-app]: http://github.com/apache/cordova-app-hello-world
-[bithound-img]: https://www.bithound.io/github/phonegap/phonegap-app-hello-world/badges/score.svg
-[bithound-url]: https://www.bithound.io/github/phonegap/phonegap-app-hello-world
-[config-xml]: https://github.com/phonegap/phonegap-template-hello-world/blob/master/config.xml
-[index-html]: https://github.com/phonegap/phonegap-template-hello-world/blob/master/www/index.html
-[cordova-whitelist-guide]: https://cordova.apache.org/docs/en/dev/guide/appdev/whitelist/index.html
-[cordova-plugin-whitelist]: http://cordova.apache.org/docs/en/latest/reference/cordova-plugin-whitelist
-[cordova-plugin-whitelist-csp]: http://cordova.apache.org/docs/en/latest/reference/cordova-plugin-whitelist#content-security-policy
-[csp-is-awesome]: http://cspisawesome.com

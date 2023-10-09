@@ -2,14 +2,18 @@
 
 ## Build
 
+```
 cordova prepare
 cordova build ios
 cordova build android
+```
 
 ## Run on emulator
 
+```
 cordova emulate ios
 cordova emulate android
+```
 
 ## Notes
 

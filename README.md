@@ -3,6 +3,9 @@
 ## Build
 
 ```
+cordova platform add ios
+cordova platform add android
+cordova platform add browser
 cordova prepare
 cordova build ios
 cordova build android
@@ -15,6 +18,10 @@ cordova emulate ios
 cordova emulate android
 ```
 
+## Run browser
+```
+cordova serve
+```
 ## Notes
 
 At the current time, the PlantTracer project has no plans to release a new version of Plant Tracer iOS app -- the work here in this branch is just exploratory.

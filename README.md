@@ -1,8 +1,12 @@
 # Plant Tracer app
 
-To develop Plant Tracer app:
+## To develop Plant Tracer app
 
-first clone the repo and checkout the appropriate branch
+- To work on the ios platform, no one has ever developed this app except on MacOS with XCode. It would probably be very hard to do it on other OSs like Linux or Windows.
+- Clone this repo and checkout the appropriate branch
+- [Install node.js](https://nodejs.org/en)
+- [Install cordova](https://cordova.apache.org/docs/en/12.x/guide/cli/installation.html) -- check versions
+- [Install cordova-ios requirements](https://cordova.apache.org/docs/en/12.x/guide/platforms/ios/index.html)
 
 ## Initialize the local build enviroment
 
@@ -18,7 +22,7 @@ make init
 make build
 ```
 
-## Run on emulator
+## Run on an ios simulator
 
 ```
 cordova emulate ios
@@ -61,7 +65,7 @@ This branch takes the perhaps naive position that the platforms, plugins, and no
 
 ToDo: consider updating everything in www/js
 ToDo: resolve deprecations and other warnings
-ToDo: keep working through the issues in the status below until the whole app runs
+ToDo: keep working through the issues in the platform status below until the whole app runs
 ToDo: clean up plugin semver specs -- ^ vs > vs ~. Haven't thought hard about those
 ToDo: Tests!
 ToDo: specify supported iOS range
@@ -76,7 +80,7 @@ ToDo: support android, specifying versions and devices
 
 - ios build completes successfully. The ios app runs in a simulator but only shows a black screen. There is a https://code.angularjs.org/1.6.9/docs/error/$compile/tpload error on the XCode console.
 
-- android build fails with Dex errors, probably due to android library version conflicts in various dependencies? So we're not doing android at the moment. 
-
 - browser build works a little better -- we get to the point of marking an apex, and then there is an error that initial_mask is not defined, even though initial_mask does get initialized in PlantTracer.js's init() method -- something about reloading?
+
+- android build fails with Dex errors, probably due to android library version conflicts in various dependencies? So we're not doing android at the moment. 
 

@@ -15,7 +15,7 @@ make init
 ## Build
 
 ```
-make buikd
+make build
 ```
 
 ## Run on emulator

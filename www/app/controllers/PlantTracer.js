@@ -92,16 +92,14 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
         var oldFrame, oldGray, p0;
         var initial_mask;
 
-        var zeroEle = new cv.Scalar(0, 0, 0, 255);
-        var mask = new cv.Mat(oldFrame.rows, oldFrame.cols, oldFrame.type(), zeroEle);
+        var zeroEle;
+        var mask;
 
         var frame;
         var frameGray;
         var p1;
         var st;
         var err;
-
-        const FPS = 30;
 
         $rootScope.$on("deviceReady", function(event, data){
             console.log("PT: DEVICE READY SIGNAL RECEIVED");
@@ -907,6 +905,9 @@ app.controller('PlantTracer', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GL
               }
 
               video                           = document.getElementById('videoPlayer');
+              console.log("video %s", video)
+              console.log("height " + video.height + " width " + video.width)
+              
               cap                         = new cv.VideoCapture(video);
               canvas                          = document.getElementById("canvas");
               context                         = canvas.getContext('2d');

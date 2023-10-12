@@ -11,6 +11,7 @@ app.factory('GLOBAL', ['$rootScope', '$http', function($rootScope, $http){
             return attachFastClick(document.body);
         },
 		checkConnection: function() {
+			/* does not exist on all browsers, and seems to be unused in this app
             var networkState = navigator.connection.type;            
             var states = {};
             states[Connection.UNKNOWN]  = 'Unknown connection';
@@ -22,6 +23,8 @@ app.factory('GLOBAL', ['$rootScope', '$http', function($rootScope, $http){
             states[Connection.CELL]     = 'Cell generic connection';
             states[Connection.NONE]     = 'No network connection';
             return states[networkState];
+			*/
+			return 'Unknown connection';
         },
         techDetect: function(){
         	var devicePlatform 			= device.platform;

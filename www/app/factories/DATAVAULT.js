@@ -195,12 +195,7 @@ app.factory('DATAVAULT', ['$http', '$rootScope', function($http, $rootScope){
         },        
         createDatabase : function(){
         	console.log("Creating Local Database...");
-           // if( device.platform == "browser"){
-            	ptdb = window.openDatabase("plantTracer", "1.0", "gamelog", 1000000);
-            	//drdb = window.openDatabase("dream", "1.0", "gamelog", 1000000);
-           // }else{
-            //	ptdb = window.sqlitePlugin.openDatabase({name: "gameScribe.db", location: 1});
-            //}
+           	ptdb = window.sqlitePlugin.openDatabase({name: 'plantTracer', location: 'default'});
             this.populateDB();
         	return ptdb;
         },

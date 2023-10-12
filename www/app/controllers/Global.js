@@ -177,7 +177,7 @@ app.controller('Global', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GLOBAL'
             $rootScope.db               = DATAVAULT.createDatabase();
             $rootScope.tapDelay         = GLOBAL.removeTapDelay();
             $rootScope.deviceLoaded     = true;
-            $rootScope.uploader         = FileTransferManager.init();
+  //          $rootScope.uploader         = FileTransferManager.init();
 
             $rootScope.framerate        = 0;
 
@@ -190,21 +190,29 @@ app.controller('Global', ['$rootScope', '$scope', '$http', 'DATAVAULT', 'GLOBAL'
               window.cordova.plugins.Keyboard.disableScroll(true);
             }
 
-            window.plugins.uniqueDeviceID.get(success, fail);
+            window.plugins.uniqueDeviceID.get(success_uuid, fail_uuid);
             //$rootScope.uniqueID = device.uuid;
            
-            window.cordovaHTTP.enableSSLPinning(true, function() {
-                console.warn('success!');
-            }, function() {
-                console.warn('error :(');
-            });
+            if (window.cordovaHTTP) {
+                window.cordovaHTTP.enableSSLPinning(true, function() {
+                    console.warn('enableSSLPinning success!');
+                }, function() {
+                    console.warn('enableSSLPinning error :(');
+                });
+            }
         }
 
-        function success(uuid)
+        function success_uuid(uuid)
         {
             //alert(device.uuid);
             console.log(uuid);
             $rootScope.uniqueID = device.uuid;
+        };
+
+        function fail_uuid()
+        {
+            console.log('unique device id failed.');
+            $rootScope.uniqueID = 'Unknown';
         };
 
         $rootScope.$on("csvfileready", function(event, data){
